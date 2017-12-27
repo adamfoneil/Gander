@@ -1,16 +1,19 @@
 ﻿using AdamOneilSoftware;
 using Gander.Library;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Gander.Library.Environments;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace ConsoleTest
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
+        {
+            var config = XmlSerializerHelper.Load<Configuration>(@"C:\Users\Adam\Desktop\Gander\Config.xml");
+        }
+
+        private static void Main2(string[] args)
         {
             var config = new Configuration();
             config.Login = new Form()
@@ -18,13 +21,19 @@ namespace ConsoleTest
                 Id = "frmLogin"
             };
 
-            config.Environments = new Configuration.Environment[]
+            config.Environments = new SqlEnvironment[]
             {
-                new Configuration.Environment() { Name = "Dev", Url = "http://localhost:53679/", ConnectionString = "@myconnection.xml" },
-                new Configuration.Environment() { Name = "Prod", Url = "http://ginseng.azurewebsites.net/", ConnectionString = "@myconnection.xml" }
+                new SqlEnvironment() { Name = "Dev", Url = "http://localhost:53679/", ConnectionString = "@myconnection.xml" },
+                new SqlEnvironment() { Name = "Prod", Url = "http://ginseng.azurewebsites.net/", ConnectionString = "@myconnection.xml" }
             };
 
             config.LogoffUrl = "Account/Logoff";
+
+            config.Roles = new Configuration.Role[]
+            {
+                new Configuration.Role() { Name = "Regular User" },
+                new Configuration.Role() { Name = "Power User" }
+            };
 
             XmlSerializerHelper.Save(config, @"C:\Users\Adam\Desktop\Gander\Config.xml");
         }

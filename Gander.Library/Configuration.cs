@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Gander.Library.Environments;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Xml.Serialization;
 
 namespace Gander.Library
 {
+    [XmlInclude(typeof(SqlEnvironment))]
     public class Configuration
     {
         /// <summary>
@@ -31,7 +34,7 @@ namespace Gander.Library
         /// <summary>
         /// List of user types available to this test configuration
         /// </summary>
-        public UserType[] UserTypes { get; set; }
+        public Role[] Roles { get; set; }
 
         public IEnumerable<string> GetEnvironmentNames()
         {
@@ -41,42 +44,6 @@ namespace Gander.Library
         public Environment this[string name]
         {
             get { return Environments.Single(e => e.Name.Equals(name)); }
-        }
-
-        /// <summary>
-        /// Base URL where tests can be run
-        /// </summary>
-        public class Environment
-        {            
-            [XmlAttribute("name")]
-            public string Name { get; set; }
-
-            /// <summary>
-            /// Literal connection string, or filename if prefixed with @
-            /// </summary>
-            [XmlAttribute("connectionString")]
-            public string ConnectionString { get; set; }
-
-            /// <summary>
-            /// Base URL for all tests in this environment
-            /// </summary>
-            [XmlAttribute("url")]
-            public string Url { get; set; }
-
-            [XmlAttribute("description")]
-            public string Description { get; set; }
-        }
-
-        /// <summary>
-        /// Describes a type of user (normally based on role or permission level) that is logged in by Gander to execute tests
-        /// </summary>
-        public class UserType
-        {
-            [XmlAttribute("name")]
-            public string Name { get; set; }
-
-            [XmlAttribute("description")]
-            public string Description { get; set; }
         }
     }
 }

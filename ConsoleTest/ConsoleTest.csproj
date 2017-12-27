@@ -52,6 +52,9 @@
     <PackageReference Include="AoXmlSerializer">
       <Version>1.0.12</Version>
     </PackageReference>
+    <PackageReference Include="Dapper">
+      <Version>1.50.4</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gander.Library\Gander.Library.csproj">
