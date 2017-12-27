@@ -29,10 +29,10 @@ namespace ConsoleTest
 
             config.LogoffUrl = "Account/Logoff";
 
-            config.Roles = new Configuration.Role[]
+            config.Roles = new Role[]
             {
-                new Configuration.Role() { Name = "Regular User" },
-                new Configuration.Role() { Name = "Power User" }
+                new Role() { Name = "Regular User" },
+                new Role() { Name = "Power User" }
             };
 
             XmlSerializerHelper.Save(config, @"C:\Users\Adam\Desktop\Gander\Config.xml");
