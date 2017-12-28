@@ -91,16 +91,20 @@ namespace Gander.Library
 
         public Environment.Results RunTests(string environment)
         {
-            var fileList = Directory.GetFiles(TestFilePath, TestFileSearchPattern, SearchOption.AllDirectories);
-
-            List<Test> tests = new List<Test>();
-            foreach (string fileName in fileList)
+            if (Directory.Exists(TestFilePath))
             {
-                var test = XmlSerializerHelper.Load<Test>(fileName);
-                test.Name = Path.GetFileNameWithoutExtension(fileName);
-                tests.Add(test);
+                var fileList = Directory.GetFiles(TestFilePath, TestFileSearchPattern, SearchOption.AllDirectories);
+
+                List<Test> tests = new List<Test>();
+                foreach (string fileName in fileList)
+                {
+                    var test = XmlSerializerHelper.Load<Test>(fileName);
+                    test.Name = fileName.Substring(TestFilePath.Length);
+                    tests.Add(test);
+                }
+                Tests = tests.ToArray();
             }
-            
+
             var env = this[environment];
             return env.RunTests(this);
         }

@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using OpenQA.Selenium;
+using System.Xml.Serialization;
 
 namespace Gander.Library
 {
@@ -31,5 +32,9 @@ namespace Gander.Library
         /// </summary>
         [XmlAttribute("anonymous")]
         public bool IsAnonymous { get; set; }
+
+        internal void Execute(IWebDriver driver, Application application, Environment environment)
+        {
+        }
     }
 }

@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -68,8 +69,14 @@ namespace Gander.Library
 
         public class Results
         {
-            public IEnumerable<string> Passed { get; set; }
+            public IEnumerable<PassedTest> Passed { get; set; }
             public IEnumerable<TestException> Failed { get; set; }
+        }
+
+        public class PassedTest
+        {
+            public string Name { get; set; }
+            public long ElapsedMilleseconds { get; set; }
         }
 
         internal Results RunTests(Application application)
@@ -87,13 +94,32 @@ namespace Gander.Library
                 throw new Exception("Application must have at least one driver factory.");
             }
 
-            List<string> passed = new List<string>();
+            if (!application.Tests?.Any() ?? false)
+            {
+                throw new Exception("Application must have at least one test defined.");
+            }
+
+            List<PassedTest> passed = new List<PassedTest>();
             List<TestException> failed = new List<TestException>();
 
             foreach (var invoker in application.DriverFactories)
             {
                 var driver = invoker.Invoke();
-                
+                foreach (var test in application.Tests)
+                {
+                    var sw = Stopwatch.StartNew();
+                    try
+                    {
+                        test.Execute(driver, application, this);                        
+                        sw.Stop();
+                        passed.Add(new PassedTest() { Name = test.Name, ElapsedMilleseconds = sw.ElapsedMilliseconds });
+                    }
+                    catch (Exception exc)
+                    {
+                        sw.Stop();
+                        failed.Add(new TestException(test, driver.GetType().Name, sw.ElapsedMilliseconds, exc.Message));
+                    }                    
+                }
             }
 
             return new Results() { Passed = passed, Failed = failed };
