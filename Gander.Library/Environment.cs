@@ -82,7 +82,7 @@ namespace Gander.Library
         internal Results Execute(Application application)
         {
             // any vars defined by application that don't have enviro-specific values?
-            var missingValues = application?.VariableNames.Where(name => !Variables?.Any(var => var.Name.Equals(name)) ?? false);
+            var missingValues = application.VariableNames?.Where(name => !Variables?.Any(var => var.Name.Equals(name)) ?? false);
 
             if (missingValues?.Any() ?? false)
             {

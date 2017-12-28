@@ -1,9 +1,11 @@
 ﻿using OpenQA.Selenium;
 using System;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Gander.Library
 {
+    [XmlInclude(typeof(Form))]
     public class Test
     {
         [XmlAttribute("name")]
@@ -41,7 +43,9 @@ namespace Gander.Library
             if (!IsAuthenticated && !IsAnonymous) throw new InvalidOperationException("Must have either Authenticated and/or Anonymous test.");
 
             if (IsAuthenticated)
-            {                
+            {
+                if (PassRoles == null) PassRoles = application.Roles?.Select(r => r.Name).ToArray();
+
                 foreach (string role in PassRoles)
                 {
                     application.Login(driver, environment.Name, role);

@@ -18,7 +18,7 @@ namespace Gander.Library
         /// <summary>
         /// Key is embedded in the page somewhere within a span element
         /// </summary>
-        Span,
+        SpanId,
         /// <summary>
         /// Inserted key must be queried via @@IDENTITY or some such (not necessarily reliable)
         /// </summary>
@@ -86,14 +86,30 @@ namespace Gander.Library
         {
             [XmlAttribute("name")]
             public string ElementId { get; set; }
-
-            [XmlAttribute("value")]
-            public string Value { get; set; }
+            
+            public object Value { get; set; }
         }
 
         protected override void OnExecute(string role, IWebDriver driver, Application application, Environment environment)
         {
-            throw new System.NotImplementedException();
+            driver.Url = this.Url;
+            driver.Navigate();
+
+            foreach (var field in Fields)
+            {
+                var element = driver.FindElement(By.Id(field.ElementId));
+                element.SendKeys(field.Value.ToString());
+            }
+
+            var form = driver.FindElement(By.Id(this.ElementId));
+            form.Submit();
+
+            switch (InsertedKeySource)
+            {
+                case InsertedKeySource.UrlEnd:
+                    InsertedKey = driver.Url.Split('/').Last();
+                    break;
+            }
         }
     }
 }

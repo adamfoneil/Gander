@@ -26,7 +26,7 @@ namespace Gander.Library.Assertions
         {
             using (var cn = environment.GetConnection())
             {
-                // todo: insert variables in Query
+                // todo: insert app/env variables in Query
                 var data = cn.Query(Query);
                 return (AnyExpected) ? data.Any() : !data.Any();
             }            

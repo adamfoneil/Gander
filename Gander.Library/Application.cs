@@ -38,7 +38,10 @@ namespace Gander.Library
         /// </summary>
         public Form LoginForm { get; set; }
 
+        [XmlAttribute("loginUserElementId")]
         public string LoginUserElementId { get; set; } = "UserName";
+
+        [XmlAttribute("loginPasswordElementId")]
         public string LoginPasswordElementId { get; set; } = "Password";
 
         /// <summary>
@@ -118,11 +121,13 @@ namespace Gander.Library
         /// <summary>
         /// Local path from where test files are loaded
         /// </summary>
+        [XmlAttribute("testFilePath")]
         public string TestFilePath { get; set; }
 
         /// <summary>
         /// Extension used with test source files
         /// </summary>
+        [XmlAttribute("testFileSearchPattern")]
         public string TestFileSearchPattern { get; set; } = "*.xml";
 
         public Environment.Results RunTests(string environment)
