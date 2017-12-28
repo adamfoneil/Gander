@@ -10,20 +10,20 @@ namespace ConsoleTest
     {
         private static void Main()
         {
-            var config = XmlSerializerHelper.Load<Configuration>(@"C:\Users\Adam\Desktop\Gander\Config.xml");
+            var config = XmlSerializerHelper.Load<Application>(@"C:\Users\Adam\Desktop\Gander\Config.xml");
         }
 
         private static void Main2(string[] args)
         {
-            var config = new Configuration();
+            var config = new Application();
             config.LoginForm = new Form()
             {
-                Id = "frmLogin"
+                ElementId = "frmLogin"
             };
 
-            config.Environments = new SqlEnvironment[]
+            config.Environments = new SqlServerEnvironment[]
             {
-                new SqlEnvironment()
+                new SqlServerEnvironment()
                 {
                     Name = "Dev",
                     Url = "http://localhost:53679/",
@@ -33,7 +33,7 @@ namespace ConsoleTest
                         new Credential() { Role = "Regular User", UserName = "test.user@nowhere.org", Password = "Hello.1234" }
                     }
                 },
-                new SqlEnvironment()
+                new SqlServerEnvironment()
                 {
                     Name = "Prod",
                     Url = "http://ginseng.azurewebsites.net/",

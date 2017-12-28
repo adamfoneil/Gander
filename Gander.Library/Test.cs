@@ -17,9 +17,9 @@ namespace Gander.Library
         public bool IsAuthenticated { get; set; } = true;
 
         /// <summary>
-        /// What role names should pass this test?
+        /// What roles should pass this test?
         /// </summary>
-        public string[] AcceptRoles { get; set; }
+        public string[] PassRoles { get; set; }
 
         /// <summary>
         /// What roles should fail this test?

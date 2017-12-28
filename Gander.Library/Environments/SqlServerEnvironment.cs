@@ -6,7 +6,7 @@ namespace Gander.Library.Environments
     /// <summary>
     /// SqlServer-specific test environment
     /// </summary>
-    public class SqlEnvironment : Environment
+    public class SqlServerEnvironment : Environment
     {
         public override IDbConnection GetConnection()
         {

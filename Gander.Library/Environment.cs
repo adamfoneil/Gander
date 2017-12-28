@@ -1,9 +1,9 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Gander.Library
@@ -54,5 +54,49 @@ namespace Gander.Library
         }
 
         public abstract IDbConnection GetConnection();
+
+        public Variable[] Variables { get; set; }
+
+        public class Variable
+        {
+            [XmlAttribute("name")]
+            public string Name { get; set; }
+
+            [XmlAttribute("value")]
+            public string Value { get; set; }
+        }
+
+        public class Results
+        {
+            public IEnumerable<string> Passed { get; set; }
+            public IEnumerable<TestException> Failed { get; set; }
+        }
+
+        internal Results RunTests(Application application)
+        {
+            // any vars defined by application that don't have enviro-specific values?
+            var missingValues = application?.VariableNames.Where(name => !Variables?.Any(var => var.Name.Equals(name)) ?? false);
+
+            if (missingValues?.Any() ?? false)
+            {
+                throw new Exception($"The {Name} environment is missing values for the variable name(s): {string.Join(", ", missingValues)}");
+            }
+
+            if (!application?.DriverFactories?.Any() ?? false)
+            {
+                throw new Exception("Application must have at least one driver factory.");
+            }
+
+            List<string> passed = new List<string>();
+            List<TestException> failed = new List<TestException>();
+
+            foreach (var invoker in application.DriverFactories)
+            {
+                var driver = invoker.Invoke();
+                
+            }
+
+            return new Results() { Passed = passed, Failed = failed };
+        }
     }
 }

@@ -41,16 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assertion.cs" />
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="Credential.cs" />
     <Compile Include="Environment.cs" />
-    <Compile Include="Environments\SqlEnvironment.cs" />
+    <Compile Include="Environments\SqlServerEnvironment.cs" />
     <Compile Include="Form.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Assertions\QueryExists.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="TestSuite.cs" />
+    <Compile Include="TestException.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AoXmlSerializer">
