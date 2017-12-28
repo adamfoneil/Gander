@@ -92,8 +92,7 @@ namespace Gander.Library
 
         protected override void OnExecute(string role, IWebDriver driver, Application application, Environment environment)
         {
-            driver.Url = this.Url;
-            driver.Navigate();
+            application.NavigateTo(driver, environment.Name, Url);
 
             foreach (var field in Fields)
             {

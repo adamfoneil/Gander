@@ -52,9 +52,8 @@ namespace Gander.Library
 
         internal void Login(IWebDriver driver, string environment, string role)
         {
-            driver.Url = LoginForm.Url;
-            driver.Navigate();
-
+            NavigateTo(driver, environment, LoginForm.Url);
+            
             var env = _environmentDictionary[environment];
             var creds = env.Credentials.Single(c => c.Role.Equals(role));
 
@@ -66,6 +65,36 @@ namespace Gander.Library
 
             var form = driver.FindElement(By.Id(LoginForm.ElementId));
             form.Submit();
+        }
+
+        public INavigation NavigateTo(IWebDriver driver, string environment, string url)
+        {
+            driver.Url = AppUrl(environment, url);
+            return driver.Navigate();
+        }
+
+        protected string AppUrl(string environment, string url)
+        {
+            string result = _environmentDictionary[environment].Url;
+
+            if (result.StartsWith("/") & url.EndsWith("/"))
+            {
+                // trim first slash on url
+                result += url.Substring(1);
+            }
+            else
+            {
+                if (result.StartsWith("/") ^ url.EndsWith("/"))
+                {
+                    result += url;
+                }
+                else
+                {
+                    result += "/" + url;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
