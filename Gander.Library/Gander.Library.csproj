@@ -51,6 +51,7 @@
     <Compile Include="Role.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="TestException.cs" />
+    <Compile Include="TestStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AoXmlSerializer">

@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System;
 using System.Xml.Serialization;
 
 namespace Gander.Library
@@ -33,8 +34,36 @@ namespace Gander.Library
         [XmlAttribute("anonymous")]
         public bool IsAnonymous { get; set; }
 
+        public TestStep[] Steps { get; set; }
+
         internal void Execute(IWebDriver driver, Application application, Environment environment)
         {
+            if (!IsAuthenticated && !IsAnonymous) throw new InvalidOperationException("Must have either Authenticated and/or Anonymous test.");
+
+            if (IsAuthenticated)
+            {                
+                foreach (string role in PassRoles)
+                {
+                    application.Login(driver, environment.Name, role);
+
+                    foreach (var step in Steps)
+                    {
+                        step.Execute(role, driver, application, environment);
+                    }
+
+                    application.Logout(driver);
+                }
+            }
+
+            if (IsAnonymous)
+            {
+                application.Logout(driver);
+
+                foreach (var step in Steps)
+                {
+                    step.Execute("<anonymous>", driver, application, environment);
+                }
+            }
         }
     }
 }

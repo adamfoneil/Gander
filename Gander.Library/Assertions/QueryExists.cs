@@ -22,13 +22,14 @@ namespace Gander.Library.Assertions
         [XmlAttribute("anyExpected")]
         public bool AnyExpected { get; set; } = true;
 
-        public override bool Evaluate(Environment environment)
+        public override bool Evaluate(Application application, Environment environment)
         {
             using (var cn = environment.GetConnection())
             {
+                // todo: insert variables in Query
                 var data = cn.Query(Query);
                 return (AnyExpected) ? data.Any() : !data.Any();
-            }
+            }            
         }
     }
 }

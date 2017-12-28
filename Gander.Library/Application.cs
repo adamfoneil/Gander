@@ -15,13 +15,15 @@ namespace Gander.Library
     [XmlInclude(typeof(SqlServerEnvironment))]
     public class Application
     {
+        private Environment[] _environments;
+        private Dictionary<string, Environment> _environmentDictionary;
+
         public Application()
         {
-            // by default we'll test in Chrome and Firefox
+            // by default we'll test in Chrome only
             DriverFactories = new Func<IWebDriver>[]
             {
-                () => new ChromeDriver(),
-                () => new FirefoxDriver()
+                () => new ChromeDriver()
             };
         }
 
@@ -36,17 +38,51 @@ namespace Gander.Library
         /// </summary>
         public Form LoginForm { get; set; }
 
+        public string LoginUserElementId { get; set; } = "UserName";
+        public string LoginPasswordElementId { get; set; } = "Password";
+
         /// <summary>
         /// URL to navigate to cause current user to log out
         /// </summary>
         [XmlAttribute("logOffUrl")]
         public string LogoffUrl { get; set; }
 
+        internal void Login(IWebDriver driver, string environment, string role)
+        {
+            driver.Url = LoginForm.Url;
+            driver.Navigate();
+
+            var env = _environmentDictionary[environment];
+            var creds = env.Credentials.Single(c => c.Role.Equals(role));
+
+            var field = driver.FindElement(By.Id(LoginUserElementId));
+            field.SendKeys(creds.UserName);
+
+            field = driver.FindElement(By.Id(LoginPasswordElementId));
+            field.SendKeys(creds.Password);
+
+            var form = driver.FindElement(By.Id(LoginForm.ElementId));
+            form.Submit();
+        }
+
         /// <summary>
         /// List of environments available to this test configuration
         /// </summary>
-        public Environment[] Environments { get; set; }
-        
+        public Environment[] Environments
+        {
+            get { return _environments; }
+            set
+            {
+                _environments = value;
+                _environmentDictionary = _environments.ToDictionary(item => item.Name);
+            }
+        }
+
+        internal void Logout(IWebDriver driver)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// List of Roles available to this test configuration
         /// </summary>
@@ -59,7 +95,7 @@ namespace Gander.Library
         
         public Environment this[string name]
         {
-            get { return Environments.Single(e => e.Name.Equals(name)); }
+            get { return _environmentDictionary[name]; }
         }
 
         /// <summary>
@@ -106,7 +142,11 @@ namespace Gander.Library
             }
 
             var env = this[environment];
-            return env.RunTests(this);
+            var results = env.Execute(this);
+
+            // todo: save results log
+
+            return results;
         }
     }
 }

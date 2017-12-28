@@ -76,10 +76,10 @@ namespace Gander.Library
         public class PassedTest
         {
             public string Name { get; set; }
-            public long ElapsedMilleseconds { get; set; }
+            public long MillesecondsElapsed { get; set; }
         }
 
-        internal Results RunTests(Application application)
+        internal Results Execute(Application application)
         {
             // any vars defined by application that don't have enviro-specific values?
             var missingValues = application?.VariableNames.Where(name => !Variables?.Any(var => var.Name.Equals(name)) ?? false);
@@ -110,15 +110,16 @@ namespace Gander.Library
                     var sw = Stopwatch.StartNew();
                     try
                     {
-                        test.Execute(driver, application, this);                        
+                        test.Execute(driver, application, this);
                         sw.Stop();
-                        passed.Add(new PassedTest() { Name = test.Name, ElapsedMilleseconds = sw.ElapsedMilliseconds });
+                        passed.Add(new PassedTest() { Name = test.Name, MillesecondsElapsed = sw.ElapsedMilliseconds });
                     }
-                    catch (Exception exc)
+                    catch (TestException exc)
                     {
                         sw.Stop();
-                        failed.Add(new TestException(test, driver.GetType().Name, sw.ElapsedMilliseconds, exc.Message));
-                    }                    
+                        exc.MillesecondsElapsed = sw.ElapsedMilliseconds;
+                        failed.Add(exc);
+                    }
                 }
             }
 
