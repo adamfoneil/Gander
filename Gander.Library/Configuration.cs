@@ -18,7 +18,7 @@ namespace Gander.Library
         /// <summary>
         /// Login form to use for all authenticated tests
         /// </summary>
-        public Form Login { get; set; }
+        public Form LoginForm { get; set; }
 
         /// <summary>
         /// URL to navigate to cause current user to log out
@@ -32,7 +32,7 @@ namespace Gander.Library
         public Environment[] Environments { get; set; }
         
         /// <summary>
-        /// List of user types available to this test configuration
+        /// List of Roles available to this test configuration
         /// </summary>
         public Role[] Roles { get; set; }
 

@@ -16,15 +16,29 @@ namespace ConsoleTest
         private static void Main2(string[] args)
         {
             var config = new Configuration();
-            config.Login = new Form()
+            config.LoginForm = new Form()
             {
                 Id = "frmLogin"
             };
 
             config.Environments = new SqlEnvironment[]
             {
-                new SqlEnvironment() { Name = "Dev", Url = "http://localhost:53679/", ConnectionString = "@myconnection.xml" },
-                new SqlEnvironment() { Name = "Prod", Url = "http://ginseng.azurewebsites.net/", ConnectionString = "@myconnection.xml" }
+                new SqlEnvironment()
+                {
+                    Name = "Dev",
+                    Url = "http://localhost:53679/",
+                    ConnectionString = "@myconnection.xml",
+                    Credentials = new Credential[] 
+                    {
+                        new Credential() { Role = "Regular User", UserName = "test.user@nowhere.org", Password = "Hello.1234" }
+                    }
+                },
+                new SqlEnvironment()
+                {
+                    Name = "Prod",
+                    Url = "http://ginseng.azurewebsites.net/",
+                    ConnectionString = "@myconnection.xml"
+                }
             };
 
             config.LogoffUrl = "Account/Logoff";
