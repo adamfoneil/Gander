@@ -60,6 +60,11 @@ namespace Gander.Unit
 
 		protected int SubmitForm(IWebDriver driver, Environment env, Form form, InsertedKeySource keySource = InsertedKeySource.UrlEnd)
 		{
+			if (form.IsAuthenticationRequired)
+			{
+				Login(driver, env, env.DefaultCredentials());
+			}
+
 			env.NavigateTo(driver, form.Url);
 			form.Submit(driver);
 
@@ -76,7 +81,9 @@ namespace Gander.Unit
 		{
 			public string Name { get; protected set; }
 			public string Url { get; protected set; }
+
 			public abstract IDbConnection GetConnection();
+			public abstract Credentials DefaultCredentials();
 
 			public string GetUrl(string url)
 			{
@@ -100,6 +107,8 @@ namespace Gander.Unit
 				_url = url;
 				_formElementId = formElementId;
 			}
+
+			public bool IsAuthenticationRequired { get; set; }
 
 			public string FormElementId { get { return _formElementId; } }
 
